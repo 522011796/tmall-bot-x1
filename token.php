@@ -11,10 +11,16 @@ $_POST['client_secret']=$_GET['client_secret'];
 #error_log($_POST['client_secret']);
 #error_log($_POST['code']);
 #error_log($_POST['redirect_uri']);
-
 // Handle a request for an OAuth2.0 Access Token and send the response to the client
-$server = new OAuth2_Server($storage);
-$server->addGrantType(new OAuth2_GrantType_AuthorizationCode($storage));
-$server->handleTokenRequest(OAuth2_Request::createFromGlobals(), new OAuth2_Response())->send();
+$server = new OAuth2\Server($storage);
+$server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
+$server->handleTokenRequest(OAuth2\Request::createFromGlobals(), new OAuth2\Response())->send();
+
+
+
+//$_POST['grant_type']=$_GET['grant_type'];
+
+
+//$server->handleTokenRequest(OAuth2\Request::createFromGlobals())->send();
 
 ?>
