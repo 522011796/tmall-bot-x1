@@ -352,7 +352,11 @@ $num = count($vacuum);
 for($i=0;$i<$num;++$i){ 
   array_push($hadevice,array("entity_id" => $vacuum[$i]->entity_id,"friendly_name" => $vacuum[$i]->attributes->friendly_name));
 }		 
-	  
+$num = count($fan); 
+for($i=0;$i<$num;++$i){ 
+  array_push($hadevice,array("entity_id" => $fan[$i]->entity_id,"friendly_name" => $fan[$i]->attributes->friendly_name));
+}	  
+		  
 $num = count($cover); 
 for($i=0;$i<$num;++$i){ 
   array_push($hadevice,array("entity_id" => $cover[$i]->entity_id,"friendly_name" => $cover[$i]->attributes->friendly_name));
