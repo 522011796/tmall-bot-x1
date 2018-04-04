@@ -362,4 +362,113 @@ function  Device_control($obj)
 	}
 	if($obj->header->name == "SetBrightness" || $obj->header->name == "SetVolume" || $obj->header->name == "SetColor")
 	{
-		$
+		$value = $obj->payload->value;
+		if ($action=="set_bright")
+		{	
+			$post_array = array (
+				"entity_id" => $deviceId,
+				"brightness_pct" => (int)$value
+			);
+		}
+		if ($action=="set_color")
+		{	switch($value)
+			{
+			case 'Red':	
+				$a=255;
+				$b=0;
+				$c=0;
+				break;
+			case 'Green':	
+				$a=0;
+				$b=128;
+				$c=0;
+				break;
+			case 'Yellow':	
+				$a=255;
+				$b=200;
+				$c=36;
+				break;
+			case 'Blue':	
+				$a=0;
+				$b=0;
+				$c=255;
+				break;
+			case 'White':	
+				$a=255;
+				$b=255;
+				$c=255;
+				break;
+			case 'Black':	
+				$a=0;
+				$b=0;
+				$c=0;
+				break;
+			case 'Cyan':	
+				$a=0;
+				$b=255;
+				$c=255;
+				break;
+			case 'Purple':	
+				$a=128;
+				$b=0;
+				$c=128;
+				break;
+			case 'Orange':	
+				$a=255;
+				$b=165;
+				$c=0;
+				break;
+			default:
+				$a=100;
+				$b=100;
+				$c=100;
+				break;
+			}
+		
+			$post_array = array (
+				"entity_id" => $deviceId,
+				"rgb_color" => array($a,$b,$c)
+			);
+		}
+		$post_string = json_encode($post_array);
+		error_log($post_string);
+    		$opts = array(
+			'http' => array(
+				 'method' => "POST",
+        			 'header' => "Content-Type: application/json",
+        			 'content'=> $post_string
+        	    		)
+			);
+		$context = stream_context_create($opts);
+		$http_post = URL."/api/services/".$device_ha."/turn_on?api_password=".PASS;
+		error_log($http_post);
+		$pdt_response = file_get_contents($http_post, false, $context);
+		$response = new Response();
+		$response->put_control_response(True,$response_name,$deviceId,"","");	
+		return $response;
+	}	
+	if($obj->header->name == "TurnOn" || $obj->header->name == "TurnOff" || $obj->header->name == "Pause"  ||  $obj->header->name == "Continue")
+	{
+		$post_array = array (
+			"entity_id" => $deviceId,
+		);
+    		$post_string = json_encode($post_array);
+    		$opts = array(
+			'http' => array(
+				 'method' => "POST",
+        			 'header' => "Content-Type: application/json",
+        			 'content'=> $post_string
+        	    		)
+			);
+		$context = stream_context_create($opts);
+		$http_post = URL."/api/services/".$device_ha."/".$action."?api_password=".PASS;
+		error_log($http_post);
+		$pdt_response = file_get_contents($http_post, false, $context);
+		$response = new Response();
+		$response->put_control_response(True,$response_name,$deviceId,"","");	
+		return $response;
+	}	
+}
+
+
+?>
